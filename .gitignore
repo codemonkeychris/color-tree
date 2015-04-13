@@ -3,6 +3,6 @@
 ################################################################################
 
 /bin
-/src/ColorTree.Windows/obj/Debug
+/src/ColorTree.Windows/obj
 *.suo
 *.user
