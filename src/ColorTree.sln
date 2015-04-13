@@ -1,0 +1,60 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ColorTree", "ColorTree", "{B7C53376-791D-4F3D-8E19-447DCE21CBE2}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ColorTree.Shared", "ColorTree.Shared\ColorTree.Shared.shproj", "{D0DE59AD-B803-499C-BBF7-ABA0317D4E34}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ColorTree.Windows", "ColorTree.Windows\ColorTree.Windows.csproj", "{18B801FB-BECD-4137-8654-BD5C5391F736}"
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		ColorTree.Shared\ColorTree.Shared.projitems*{d0de59ad-b803-499c-bbf7-aba0317d4e34}*SharedItemsImports = 13
+		ColorTree.Shared\ColorTree.Shared.projitems*{18b801fb-becd-4137-8654-bd5c5391f736}*SharedItemsImports = 4
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|ARM = Debug|ARM
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|ARM = Release|ARM
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{18B801FB-BECD-4137-8654-BD5C5391F736}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18B801FB-BECD-4137-8654-BD5C5391F736}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18B801FB-BECD-4137-8654-BD5C5391F736}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{18B801FB-BECD-4137-8654-BD5C5391F736}.Debug|ARM.ActiveCfg = Debug|ARM
+		{18B801FB-BECD-4137-8654-BD5C5391F736}.Debug|ARM.Build.0 = Debug|ARM
+		{18B801FB-BECD-4137-8654-BD5C5391F736}.Debug|ARM.Deploy.0 = Debug|ARM
+		{18B801FB-BECD-4137-8654-BD5C5391F736}.Debug|x64.ActiveCfg = Debug|x64
+		{18B801FB-BECD-4137-8654-BD5C5391F736}.Debug|x64.Build.0 = Debug|x64
+		{18B801FB-BECD-4137-8654-BD5C5391F736}.Debug|x64.Deploy.0 = Debug|x64
+		{18B801FB-BECD-4137-8654-BD5C5391F736}.Debug|x86.ActiveCfg = Debug|x86
+		{18B801FB-BECD-4137-8654-BD5C5391F736}.Debug|x86.Build.0 = Debug|x86
+		{18B801FB-BECD-4137-8654-BD5C5391F736}.Debug|x86.Deploy.0 = Debug|x86
+		{18B801FB-BECD-4137-8654-BD5C5391F736}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18B801FB-BECD-4137-8654-BD5C5391F736}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18B801FB-BECD-4137-8654-BD5C5391F736}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{18B801FB-BECD-4137-8654-BD5C5391F736}.Release|ARM.ActiveCfg = Release|ARM
+		{18B801FB-BECD-4137-8654-BD5C5391F736}.Release|ARM.Build.0 = Release|ARM
+		{18B801FB-BECD-4137-8654-BD5C5391F736}.Release|ARM.Deploy.0 = Release|ARM
+		{18B801FB-BECD-4137-8654-BD5C5391F736}.Release|x64.ActiveCfg = Release|x64
+		{18B801FB-BECD-4137-8654-BD5C5391F736}.Release|x64.Build.0 = Release|x64
+		{18B801FB-BECD-4137-8654-BD5C5391F736}.Release|x64.Deploy.0 = Release|x64
+		{18B801FB-BECD-4137-8654-BD5C5391F736}.Release|x86.ActiveCfg = Release|x86
+		{18B801FB-BECD-4137-8654-BD5C5391F736}.Release|x86.Build.0 = Release|x86
+		{18B801FB-BECD-4137-8654-BD5C5391F736}.Release|x86.Deploy.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D0DE59AD-B803-499C-BBF7-ABA0317D4E34} = {B7C53376-791D-4F3D-8E19-447DCE21CBE2}
+		{18B801FB-BECD-4137-8654-BD5C5391F736} = {B7C53376-791D-4F3D-8E19-447DCE21CBE2}
+	EndGlobalSection
+EndGlobal
