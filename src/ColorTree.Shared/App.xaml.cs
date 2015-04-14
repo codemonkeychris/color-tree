@@ -7,9 +7,11 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -31,7 +33,12 @@ namespace ColorTree
 #if WINDOWS_PHONE_APP
         private TransitionCollection transitions;
 #endif
-        public Dictionary<string, List<ColorEntry>> ColorData;
+
+        public static IAsyncAction BeginInvoke(DispatchedHandler callback)
+        {
+            var dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
+            return dispatcher.RunAsync(CoreDispatcherPriority.Normal, callback);
+        }
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -39,6 +46,7 @@ namespace ColorTree
         /// </summary>
         public App()
         {
+            
             this.InitializeComponent();
             this.Suspending += this.OnSuspending;
 
@@ -66,6 +74,11 @@ namespace ColorTree
                     entries = new List<ColorEntry>();
                     hexIndex[rawData[i].hexCode] = entries;
                 }
+
+                var item = rawData[i];
+                item.r = byte.Parse(item.hexCode.Substring(1, 2), System.Globalization.NumberStyles.HexNumber);
+                item.g = byte.Parse(item.hexCode.Substring(3, 2), System.Globalization.NumberStyles.HexNumber);
+                item.b = byte.Parse(item.hexCode.Substring(5, 2), System.Globalization.NumberStyles.HexNumber);
 
                 entries.Add(rawData[i]);
             }
@@ -95,7 +108,11 @@ namespace ColorTree
                 }
             }
 
-            ColorData = colorTree;
+            await BeginInvoke(() =>
+            {
+                Frame rootFrame = Window.Current.Content as Frame;
+                rootFrame.Navigate(typeof(MainPage), colorTree);
+            });
         }
 
         private async Task<StorageFile> GetPackagedFile(string folderName, string fileName)
@@ -165,11 +182,10 @@ namespace ColorTree
                 rootFrame.ContentTransitions = null;
                 rootFrame.Navigated += this.RootFrame_FirstNavigated;
 #endif
-
                 // When the navigation stack isn't restored navigate to the first page,
                 // configuring the new page by passing required information as a navigation
                 // parameter
-                if (!rootFrame.Navigate(typeof(MainPage), e.Arguments))
+                if (!rootFrame.Navigate(typeof(splash), e.Arguments))
                 {
                     throw new Exception("Failed to create initial page");
                 }
@@ -206,12 +222,6 @@ namespace ColorTree
 
             // TODO: Save application state and stop any background activity
             deferral.Complete();
-        }
-
-        public class ColorEntry
-        {
-            public string name;
-            public string hexCode;
         }
 
         static ColorEntry[] rawData = {
@@ -1167,6 +1177,14 @@ namespace ColorTree
             new ColorEntry { name = "green", hexCode = "#15b01a" },
             new ColorEntry { name = "purple", hexCode = "#7e1e9c" }
         };
-
     }
+    public class ColorEntry
+    {
+        public string name { get; set; }
+        public string hexCode { get; set; }
+        public byte r { get; set; }
+        public byte g { get; set; }
+        public byte b { get; set; }
+    }
+
 }

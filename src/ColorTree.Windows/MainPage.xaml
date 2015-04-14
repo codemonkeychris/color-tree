@@ -7,7 +7,54 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Page.Resources>
+        <DataTemplate x:Key="topLevel">
+            <Grid Width="300" Height="75">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="75" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+                <Rectangle Margin="5" Stroke="White" StrokeThickness="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                    <Rectangle.Fill>
+                        <Binding>
+                            <Binding.Converter>
+                                <local:TopLevelEntryColorConverter />
+                            </Binding.Converter>
+                        </Binding>
+                    </Rectangle.Fill>
+                </Rectangle>
+                <TextBlock Grid.Column="1" Text="{Binding Key}" />
+            </Grid>
+        </DataTemplate>
 
+        <DataTemplate x:Key="entry">
+            <Grid Width="300" Height="75">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="75" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+                <Rectangle Margin="5" Stroke="White" StrokeThickness="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                    <Rectangle.Fill>
+                        <Binding>
+                            <Binding.Converter>
+                                <local:EntryColorConverter />
+                            </Binding.Converter>
+                        </Binding>
+                    </Rectangle.Fill>
+                </Rectangle>
+                <TextBlock Grid.Column="1" Text="{Binding name}" />
+            </Grid>
+        </DataTemplate>
+
+        <local:ColorTemplateSelector x:Key="colorTemplateSelector" Entry="{StaticResource entry}" TopLevel="{StaticResource topLevel}" />
+    </Page.Resources>
+    
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="1*" />
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Style="{StaticResource HeaderTextBlockStyle}">Colors</TextBlock>
+        <GridView Grid.Row="1" x:Name="gridView1" ItemTemplateSelector="{StaticResource colorTemplateSelector}" SelectionMode="None" IsItemClickEnabled="True" ItemClick="gridView1_ItemClick" />
     </Grid>
 </Page>
