@@ -49,12 +49,27 @@
         <local:ColorTemplateSelector x:Key="colorTemplateSelector" Entry="{StaticResource entry}" TopLevel="{StaticResource topLevel}" />
     </Page.Resources>
     
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" x:Name="mainContainer">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="140" />
             <RowDefinition Height="1*" />
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" Style="{StaticResource HeaderTextBlockStyle}">Colors</TextBlock>
-        <GridView Grid.Row="1" x:Name="gridView1" ItemTemplateSelector="{StaticResource colorTemplateSelector}" SelectionMode="None" IsItemClickEnabled="True" ItemClick="gridView1_ItemClick" />
+        <GridView Padding="116,137,40,46" Grid.RowSpan="2" Grid.Row="0" x:Name="gridView1" ItemTemplateSelector="{StaticResource colorTemplateSelector}" SelectionMode="None" IsItemClickEnabled="True" />
+        <ProgressRing Grid.Row="1" x:Name="busyWait" Visibility="Collapsed" />
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="120"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="backButton" 
+                Margin="39,59,39,0" 
+                Click="backButton_Click"
+                Style="{StaticResource NavigationBackButtonNormalStyle}"
+                VerticalAlignment="Top"
+                AutomationProperties.Name="Back"
+                AutomationProperties.AutomationId="BackButton"
+                AutomationProperties.ItemType="Navigation Button"/>
+            <TextBlock x:Name="pageTitle" Text="Colors" Style="{StaticResource HeaderTextBlockStyle}" Grid.Column="1" IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="0,0,30,40"/>
+        </Grid>
     </Grid>
 </Page>
