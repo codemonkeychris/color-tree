@@ -7,6 +7,8 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Automation;
+using Windows.UI.Xaml.Automation.Peers;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
@@ -28,6 +30,21 @@ namespace ColorTree
         {
             this.InitializeComponent();
             gridView1.ItemClick += gridView1_ItemClick;
+            gridView1.PrepareContainer += gridView1_PrepareContainer;
+        }
+
+        void gridView1_PrepareContainer(object sender, PrepareContainerEventArgs e)
+        {
+            FrameworkElement source = e.element as FrameworkElement;
+            if (e.item is ColorEntry)
+            {
+                AutomationProperties.SetName(e.element, ((ColorEntry)e.item).name);
+            }
+            else
+            {
+                var i = (KeyValuePair<string, List<ColorEntry>>)e.item;
+                AutomationProperties.SetName(e.element, i.Key);
+            }
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -42,6 +59,20 @@ namespace ColorTree
             ShowItem(e.ClickedItem);
         }
 
+        void narratorSpeak(string msg)
+        {
+            speak.Text = msg;
+            var peer = FrameworkElementAutomationPeer.FromElement(speak);
+            if (peer != null)
+            {
+                peer.RaiseAutomationEvent(AutomationEvents.LiveRegionChanged);
+            }
+        }
+        void narratorStop()
+        {
+            speak.Text = "";
+        }
+
         void ShowItem(object state) 
         {
             // This simulates a long delay to load data... 
@@ -54,6 +85,7 @@ namespace ColorTree
             gridView1.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
             busyWait.Visibility = Windows.UI.Xaml.Visibility.Visible;
             busyWait.IsActive = true;
+            narratorSpeak("Loading data");
 
             // next we wait some time
             //
@@ -63,12 +95,18 @@ namespace ColorTree
             {
                 dt.Stop(); // important!
 
+                narratorStop();
+
                 // this is the real work, we update the data source of the list
                 //
                 if (state != null && !(state is ColorEntry || state is Dictionary<string, List<ColorEntry>>))
                 {
                     var topLevelClicked = (KeyValuePair<string, List<ColorEntry>>)state;
                     gridView1.ItemsSource = topLevelClicked.Value;
+                    if (topLevelClicked.Value.Count == 0)
+                    {
+                        narratorSpeak("No data found");
+                    }
                 }
                 else if (state != null)
                 {
@@ -82,6 +120,12 @@ namespace ColorTree
                 gridView1.Visibility = Windows.UI.Xaml.Visibility.Visible;
                 busyWait.IsActive = false;
                 busyWait.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+
+                Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Low, delegate()
+                {
+                    gridView1.Focus(FocusState.Keyboard);
+                });
+                
             };
             dt.Start();
         }

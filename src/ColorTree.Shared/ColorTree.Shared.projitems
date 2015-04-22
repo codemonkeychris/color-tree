@@ -15,6 +15,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)GridView2.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)splash.xaml.cs">
       <DependentUpon>splash.xaml</DependentUpon>
     </Compile>
