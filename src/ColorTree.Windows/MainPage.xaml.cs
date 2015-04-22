@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -54,7 +55,7 @@ namespace ColorTree
             gridView1.ItemsSource = topLevelSource = e.Parameter;
         }
 
-        private void gridView1_ItemClick(object sender, ItemClickEventArgs e)
+        void gridView1_ItemClick(object sender, ItemClickEventArgs e)
         {
             ShowItem(e.ClickedItem);
         }
@@ -73,7 +74,7 @@ namespace ColorTree
             speak.Text = "";
         }
 
-        void ShowItem(object state) 
+        async void ShowItem(object state) 
         {
             // This simulates a long delay to load data... 
             //
@@ -89,45 +90,46 @@ namespace ColorTree
 
             // next we wait some time
             //
-            var dt = new DispatcherTimer();
-            dt.Interval = TimeSpan.FromMilliseconds(3000);
-            dt.Tick += delegate(object s, object o)
+            await TimerTask.Wait(3000);
+
+            // cleanup narrator 
+            //
+            narratorStop();
+
+            // this is the real work, we update the data source of the list
+            //
+            if (state != null && !(state is ColorEntry || state is Dictionary<string, List<ColorEntry>>))
             {
-                dt.Stop(); // important!
-
-                narratorStop();
-
-                // this is the real work, we update the data source of the list
-                //
-                if (state != null && !(state is ColorEntry || state is Dictionary<string, List<ColorEntry>>))
+                var topLevelClicked = (KeyValuePair<string, List<ColorEntry>>)state;
+                gridView1.ItemsSource = topLevelClicked.Value;
+                if (topLevelClicked.Value.Count == 0)
                 {
-                    var topLevelClicked = (KeyValuePair<string, List<ColorEntry>>)state;
-                    gridView1.ItemsSource = topLevelClicked.Value;
-                    if (topLevelClicked.Value.Count == 0)
-                    {
-                        narratorSpeak("No data found");
-                    }
+                    narratorSpeak("No data found");
                 }
-                else if (state != null)
-                {
-                    gridView1.ItemsSource = topLevelSource;
-                }
+            }
+            else if (state != null)
+            {
+                gridView1.ItemsSource = topLevelSource;
+            }
 
-                // finally we clean up the progress ux and show the grid
-                //
-                backButton.Click += backButton_Click;
-                gridView1.ItemClick += gridView1_ItemClick;
-                gridView1.Visibility = Windows.UI.Xaml.Visibility.Visible;
-                busyWait.IsActive = false;
-                busyWait.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+            // let layout run
+            //
+            await TimerTask.Wait(0);
 
-                Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Low, delegate()
-                {
-                    gridView1.Focus(FocusState.Keyboard);
-                });
-                
-            };
-            dt.Start();
+            // finally we clean up the progress ux and show the grid
+            //
+            backButton.Click += backButton_Click;
+            gridView1.ItemClick += gridView1_ItemClick;
+            gridView1.Visibility = Windows.UI.Xaml.Visibility.Visible;
+            busyWait.IsActive = false;
+            busyWait.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+
+            gridView1.SelectedItem = ((IEnumerable)gridView1.ItemsSource).OfType<object>().FirstOrDefault();
+
+            // we need to wait for the GridView to create items, so we wait for a beat... 
+            //
+            await TimerTask.Wait(250);
+            gridView1.Focus(FocusState.Programmatic);
         }
 
         private void backButton_Click(object sender, RoutedEventArgs e)

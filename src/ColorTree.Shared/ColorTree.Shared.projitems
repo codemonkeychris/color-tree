@@ -19,6 +19,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)splash.xaml.cs">
       <DependentUpon>splash.xaml</DependentUpon>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)TimerTask.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="$(MSBuildThisFileDirectory)satfaces.txt">
