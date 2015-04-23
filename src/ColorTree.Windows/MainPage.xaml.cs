@@ -27,11 +27,23 @@ namespace ColorTree
     public sealed partial class MainPage : Page
     {
         object topLevelSource;
+        int topLevelSelectedIndex = 0;
+
         public MainPage()
         {
             this.InitializeComponent();
             gridView1.ItemClick += gridView1_ItemClick;
             gridView1.PrepareContainer += gridView1_PrepareContainer;
+        }
+
+        void gridView1_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            // ignore clicks on child items
+            if (gridView1.ItemsSource == topLevelSource)
+            {
+                topLevelSelectedIndex = gridView1.IndexFromContainer(gridView1.ContainerFromItem(e.ClickedItem));
+                ShowItem(e.ClickedItem);
+            }
         }
 
         void gridView1_PrepareContainer(object sender, PrepareContainerEventArgs e)
@@ -53,11 +65,7 @@ namespace ColorTree
             base.OnNavigatedTo(e);
 
             gridView1.ItemsSource = topLevelSource = e.Parameter;
-        }
-
-        void gridView1_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            ShowItem(e.ClickedItem);
+            topLevelSelectedIndex = 0;
         }
 
         void narratorSpeak(string msg)
@@ -74,7 +82,7 @@ namespace ColorTree
             speak.Text = "";
         }
 
-        async void ShowItem(object state) 
+        async void ShowItem(object state, int selectedIndex = 0) 
         {
             // This simulates a long delay to load data... 
             //
@@ -82,7 +90,6 @@ namespace ColorTree
             // first we show the progress UX and hide the grid
             //
             backButton.Click -= backButton_Click;
-            gridView1.ItemClick -= gridView1_ItemClick;
             gridView1.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
             busyWait.Visibility = Windows.UI.Xaml.Visibility.Visible;
             busyWait.IsActive = true;
@@ -119,22 +126,24 @@ namespace ColorTree
             // finally we clean up the progress ux and show the grid
             //
             backButton.Click += backButton_Click;
-            gridView1.ItemClick += gridView1_ItemClick;
             gridView1.Visibility = Windows.UI.Xaml.Visibility.Visible;
             busyWait.IsActive = false;
             busyWait.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
 
-            gridView1.SelectedItem = ((IEnumerable)gridView1.ItemsSource).OfType<object>().FirstOrDefault();
+            gridView1.SelectedIndex = selectedIndex;
 
             // we need to wait for the GridView to create items, so we wait for a beat... 
             //
             await TimerTask.Wait(250);
-            gridView1.Focus(FocusState.Programmatic);
+
+            gridView1.ScrollIntoView(((IEnumerable)gridView1.ItemsSource).OfType<object>().ElementAtOrDefault(selectedIndex));
+            var item = (Control)gridView1.ContainerFromIndex(selectedIndex);
+            item.Focus(FocusState.Programmatic);
         }
 
         private void backButton_Click(object sender, RoutedEventArgs e)
         {
-            ShowItem(topLevelSource);
+            ShowItem(topLevelSource, topLevelSelectedIndex);
         }
     }
 
