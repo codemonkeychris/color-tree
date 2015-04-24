@@ -2,7 +2,9 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-/bin
-/src/ColorTree.Windows/obj
+bin
+src/bin/
+src/obj/
+src/packages/
 *.suo
 *.user
