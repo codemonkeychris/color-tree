@@ -72,7 +72,6 @@
                 <ColumnDefinition Width="120"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <TextBlock Opacity="0" Visibility="Visible" x:Name="speak" AutomationProperties.LiveSetting="Polite" />
             <Button x:Name="backButton" 
                 Margin="39,59,39,0" 
                 Click="backButton_Click"
