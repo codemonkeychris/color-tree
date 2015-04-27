@@ -36,17 +36,17 @@ namespace ColorTree
             gridView1.ContainerContentChanging += GridView1_ContainerContentChanging;
         }
 
-        private void GridView1_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs e)
+        private void GridView1_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
         {
-            FrameworkElement source = e.ItemContainer as FrameworkElement;
-            if (e.Item is ColorEntry)
+            FrameworkElement source = args.ItemContainer as FrameworkElement;
+            if (args.Item is ColorEntry)
             {
-                AutomationProperties.SetName(e.ItemContainer, ((ColorEntry)e.Item).name);
+                AutomationProperties.SetName(args.ItemContainer, ((ColorEntry)args.Item).name);
             }
             else
             {
-                var i = (KeyValuePair<string, List<ColorEntry>>)e.Item;
-                AutomationProperties.SetName(e.ItemContainer, i.Key);
+                var i = (KeyValuePair<string, List<ColorEntry>>)args.Item;
+                AutomationProperties.SetName(args.ItemContainer, i.Key);
             }
         }
 
@@ -121,10 +121,6 @@ namespace ColorTree
                 gridView1.ItemsSource = topLevelSource;
             }
 
-            // let layout run
-            //
-            await TimerTask.Wait(0);
-
             // finally we clean up the progress ux and show the grid
             //
             backButton.Click += backButton_Click;
@@ -132,11 +128,7 @@ namespace ColorTree
             busyWait.IsActive = false;
             busyWait.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
 
-            gridView1.SelectedIndex = selectedIndex;
-
-            await TimerTask.Wait(250);
-
-            gridView1.ScrollIntoView(((IEnumerable)gridView1.ItemsSource).OfType<object>().ElementAtOrDefault(selectedIndex));
+            gridView1.ScrollIntoView(gridView1.Items[selectedIndex]);
             gridView1.UpdateLayout();
             var item = (Control)gridView1.ContainerFromIndex(selectedIndex);
             item.Focus(FocusState.Programmatic);
