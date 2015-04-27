@@ -70,18 +70,10 @@ namespace ColorTree
             topLevelSelectedIndex = 0;
         }
 
-        void narratorSpeak(string msg)
+        void updateNarrator(string msg)
         {
-            speak.Text = msg;
-            var peer = FrameworkElementAutomationPeer.FromElement(speak);
-            if (peer != null)
-            {
-                peer.RaiseAutomationEvent(AutomationEvents.LiveRegionChanged);
-            }
-        }
-        void narratorStop()
-        {
-            speak.Text = "";
+            readme.Text = msg;
+            FrameworkElementAutomationPeer.FromElement(readme).RaiseAutomationEvent(AutomationEvents.LiveRegionChanged);
         }
 
         async void ShowItem(object state, int selectedIndex = 0) 
@@ -95,15 +87,11 @@ namespace ColorTree
             gridView1.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
             busyWait.Visibility = Windows.UI.Xaml.Visibility.Visible;
             busyWait.IsActive = true;
-            narratorSpeak("Loading data");
+            updateNarrator("Loading data");
 
             // next we wait some time
             //
             await TimerTask.Wait(3000);
-
-            // cleanup narrator 
-            //
-            narratorStop();
 
             // this is the real work, we update the data source of the list
             //
@@ -113,7 +101,7 @@ namespace ColorTree
                 gridView1.ItemsSource = topLevelClicked.Value;
                 if (topLevelClicked.Value.Count == 0)
                 {
-                    narratorSpeak("No data found");
+                    updateNarrator("No data found");
                 }
             }
             else if (state != null)
@@ -128,10 +116,13 @@ namespace ColorTree
             busyWait.IsActive = false;
             busyWait.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
 
-            gridView1.ScrollIntoView(gridView1.Items[selectedIndex]);
-            gridView1.UpdateLayout();
-            var item = (Control)gridView1.ContainerFromIndex(selectedIndex);
-            item.Focus(FocusState.Programmatic);
+            if (gridView1.Items.Count > selectedIndex)
+            {
+                gridView1.ScrollIntoView(gridView1.Items[selectedIndex]);
+                gridView1.UpdateLayout();
+                var item = (Control)gridView1.ContainerFromIndex(selectedIndex);
+                item.Focus(FocusState.Programmatic);
+            }
         }
 
         private void backButton_Click(object sender, RoutedEventArgs e)
