@@ -33,23 +33,7 @@ namespace ColorTree
         {
             this.InitializeComponent();
             gridView1.ItemClick += gridView1_ItemClick;
-            gridView1.ContainerContentChanging += GridView1_ContainerContentChanging;
         }
-
-        private void GridView1_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
-        {
-            FrameworkElement source = args.ItemContainer as FrameworkElement;
-            if (args.Item is ColorEntry)
-            {
-                AutomationProperties.SetName(args.ItemContainer, ((ColorEntry)args.Item).name);
-            }
-            else
-            {
-                var i = (KeyValuePair<string, List<ColorEntry>>)args.Item;
-                AutomationProperties.SetName(args.ItemContainer, i.Key);
-            }
-        }
-
 
         void gridView1_ItemClick(object sender, ItemClickEventArgs e)
         {
@@ -70,12 +54,6 @@ namespace ColorTree
             topLevelSelectedIndex = 0;
         }
 
-        void updateNarrator(string msg)
-        {
-            readme.Text = msg;
-            FrameworkElementAutomationPeer.FromElement(readme).RaiseAutomationEvent(AutomationEvents.LiveRegionChanged);
-        }
-
         async void ShowItem(object state, int selectedIndex = 0) 
         {
             // This simulates a long delay to load data... 
@@ -87,7 +65,6 @@ namespace ColorTree
             gridView1.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
             busyWait.Visibility = Windows.UI.Xaml.Visibility.Visible;
             busyWait.IsActive = true;
-            updateNarrator("Loading data");
 
             // next we wait some time
             //
@@ -99,10 +76,6 @@ namespace ColorTree
             {
                 var topLevelClicked = (KeyValuePair<string, List<ColorEntry>>)state;
                 gridView1.ItemsSource = topLevelClicked.Value;
-                if (topLevelClicked.Value.Count == 0)
-                {
-                    updateNarrator("No data found");
-                }
             }
             else if (state != null)
             {
@@ -115,14 +88,6 @@ namespace ColorTree
             gridView1.Visibility = Windows.UI.Xaml.Visibility.Visible;
             busyWait.IsActive = false;
             busyWait.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
-
-            if (gridView1.Items.Count > selectedIndex)
-            {
-                gridView1.ScrollIntoView(gridView1.Items[selectedIndex]);
-                gridView1.UpdateLayout();
-                var item = (Control)gridView1.ContainerFromIndex(selectedIndex);
-                item.Focus(FocusState.Programmatic);
-            }
         }
 
         private void backButton_Click(object sender, RoutedEventArgs e)
