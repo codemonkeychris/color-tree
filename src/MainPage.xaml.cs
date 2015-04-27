@@ -88,11 +88,6 @@ namespace ColorTree
             gridView1.Visibility = Windows.UI.Xaml.Visibility.Visible;
             busyWait.IsActive = false;
             busyWait.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
-
-            gridView1.ScrollIntoView(gridView1.Items[selectedIndex]);
-            gridView1.UpdateLayout();
-            var item = (Control)gridView1.ContainerFromIndex(selectedIndex);
-            item.Focus(FocusState.Programmatic);
         }
 
         private void backButton_Click(object sender, RoutedEventArgs e)
