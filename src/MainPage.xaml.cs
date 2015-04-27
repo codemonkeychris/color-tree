@@ -33,23 +33,7 @@ namespace ColorTree
         {
             this.InitializeComponent();
             gridView1.ItemClick += gridView1_ItemClick;
-            gridView1.ContainerContentChanging += GridView1_ContainerContentChanging;
         }
-
-        private void GridView1_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs e)
-        {
-            FrameworkElement source = e.ItemContainer as FrameworkElement;
-            if (e.Item is ColorEntry)
-            {
-                AutomationProperties.SetName(e.ItemContainer, ((ColorEntry)e.Item).name);
-            }
-            else
-            {
-                var i = (KeyValuePair<string, List<ColorEntry>>)e.Item;
-                AutomationProperties.SetName(e.ItemContainer, i.Key);
-            }
-        }
-
 
         void gridView1_ItemClick(object sender, ItemClickEventArgs e)
         {
@@ -70,20 +54,6 @@ namespace ColorTree
             topLevelSelectedIndex = 0;
         }
 
-        void narratorSpeak(string msg)
-        {
-            speak.Text = msg;
-            var peer = FrameworkElementAutomationPeer.FromElement(speak);
-            if (peer != null)
-            {
-                peer.RaiseAutomationEvent(AutomationEvents.LiveRegionChanged);
-            }
-        }
-        void narratorStop()
-        {
-            speak.Text = "";
-        }
-
         async void ShowItem(object state, int selectedIndex = 0) 
         {
             // This simulates a long delay to load data... 
@@ -95,15 +65,10 @@ namespace ColorTree
             gridView1.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
             busyWait.Visibility = Windows.UI.Xaml.Visibility.Visible;
             busyWait.IsActive = true;
-            narratorSpeak("Loading data");
 
             // next we wait some time
             //
             await TimerTask.Wait(3000);
-
-            // cleanup narrator 
-            //
-            narratorStop();
 
             // this is the real work, we update the data source of the list
             //
@@ -111,10 +76,6 @@ namespace ColorTree
             {
                 var topLevelClicked = (KeyValuePair<string, List<ColorEntry>>)state;
                 gridView1.ItemsSource = topLevelClicked.Value;
-                if (topLevelClicked.Value.Count == 0)
-                {
-                    narratorSpeak("No data found");
-                }
             }
             else if (state != null)
             {
