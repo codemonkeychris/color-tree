@@ -5,6 +5,11 @@ VisualStudioVersion = 14.0.22823.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ColorTree", "ColorTree.csproj", "{D7B1FD65-D1B5-47BB-B891-5065BF246273}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{92FD5F08-D10B-4B61-9916-B80EBC411F7E}"
+	ProjectSection(SolutionItems) = preProject
+		..\demo-script.md = ..\demo-script.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
