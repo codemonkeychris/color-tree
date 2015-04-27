@@ -33,8 +33,23 @@ namespace ColorTree
         {
             this.InitializeComponent();
             gridView1.ItemClick += gridView1_ItemClick;
-            gridView1.PrepareContainer += gridView1_PrepareContainer;
+            gridView1.ContainerContentChanging += GridView1_ContainerContentChanging;
         }
+
+        private void GridView1_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs e)
+        {
+            FrameworkElement source = e.ItemContainer as FrameworkElement;
+            if (e.Item is ColorEntry)
+            {
+                AutomationProperties.SetName(e.ItemContainer, ((ColorEntry)e.Item).name);
+            }
+            else
+            {
+                var i = (KeyValuePair<string, List<ColorEntry>>)e.Item;
+                AutomationProperties.SetName(e.ItemContainer, i.Key);
+            }
+        }
+
 
         void gridView1_ItemClick(object sender, ItemClickEventArgs e)
         {
@@ -46,19 +61,6 @@ namespace ColorTree
             }
         }
 
-        void gridView1_PrepareContainer(object sender, PrepareContainerEventArgs e)
-        {
-            FrameworkElement source = e.element as FrameworkElement;
-            if (e.item is ColorEntry)
-            {
-                AutomationProperties.SetName(e.element, ((ColorEntry)e.item).name);
-            }
-            else
-            {
-                var i = (KeyValuePair<string, List<ColorEntry>>)e.item;
-                AutomationProperties.SetName(e.element, i.Key);
-            }
-        }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -132,11 +134,10 @@ namespace ColorTree
 
             gridView1.SelectedIndex = selectedIndex;
 
-            // we need to wait for the GridView to create items, so we wait for a beat... 
-            //
             await TimerTask.Wait(250);
 
             gridView1.ScrollIntoView(((IEnumerable)gridView1.ItemsSource).OfType<object>().ElementAtOrDefault(selectedIndex));
+            gridView1.UpdateLayout();
             var item = (Control)gridView1.ContainerFromIndex(selectedIndex);
             item.Focus(FocusState.Programmatic);
         }

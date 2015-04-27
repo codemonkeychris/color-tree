@@ -54,7 +54,7 @@
             <RowDefinition Height="140" />
             <RowDefinition Height="1*" />
         </Grid.RowDefinitions>
-        <local:GridView2 Padding="116,137,40,46" Grid.RowSpan="2" Grid.Row="0" x:Name="gridView1" ItemTemplateSelector="{StaticResource colorTemplateSelector}" SelectionMode="None" IsItemClickEnabled="True" />
+        <GridView Padding="116,137,40,46" Grid.RowSpan="2" Grid.Row="0" x:Name="gridView1" ItemTemplateSelector="{StaticResource colorTemplateSelector}" SelectionMode="None" IsItemClickEnabled="True" />
         <ProgressRing Grid.Row="1" x:Name="busyWait" Visibility="Collapsed" />
         <Grid>
             <Grid.ColumnDefinitions>
